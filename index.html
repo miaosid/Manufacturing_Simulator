@@ -12,15 +12,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .tag{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#a8a29e;margin-bottom:.4rem}
 h1{font-size:24px;font-weight:800;letter-spacing:-.02em;color:#1c1917;margin-bottom:1.25rem}
 
-/* Instruction box */
-.instruction{
-  background:#fff;border:1.5px solid #e7e5e4;border-radius:12px;
-  padding:14px 16px;margin-bottom:1.75rem;
-}
-.instruction-head{
-  font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;
-  color:#a8a29e;margin-bottom:6px;
-}
+.instruction{background:#fff;border:1.5px solid #e7e5e4;border-radius:12px;padding:14px 16px;margin-bottom:1.75rem}
+.instruction-head{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#a8a29e;margin-bottom:6px}
 .instruction p{font-size:13px;color:#44403c;line-height:1.65}
 
 .fixed-params{display:flex;gap:8px;margin-bottom:1rem}
@@ -38,20 +31,29 @@ h1{font-size:24px;font-weight:800;letter-spacing:-.02em;color:#1c1917;margin-bot
 .roller-num{font-size:12px;font-weight:800;color:#78716c;background:#f5f5f4;border-radius:20px;padding:2px 8px}
 .roller-img{width:52px;height:52px;object-fit:contain}
 .roller-col input{
-  width:100%;text-align:center;font-size:16px;font-weight:800;
+  width:100%;text-align:center;font-size:15px;font-weight:800;
   background:#f5f5f4;border:1.5px solid #e7e5e4;border-radius:8px;
-  padding:9px 2px;color:#1c1917;outline:none;
+  padding:6px 2px 6px 2px;color:#1c1917;outline:none;
   transition:border-color .15s,background .15s;
-  -moz-appearance:textfield;
+  cursor:pointer;
 }
-.roller-col input::-webkit-inner-spin-button,
-.roller-col input::-webkit-outer-spin-button{-webkit-appearance:none}
 .roller-col input:focus{border-color:#6366f1;background:#fff}
+/* style the spinner arrows */
+.roller-col input::-webkit-inner-spin-button{
+  -webkit-appearance:inner-spin-button;
+  opacity:1;
+  cursor:pointer;
+  height:32px;
+}
+.roller-col input::-webkit-outer-spin-button{
+  -webkit-appearance:inner-spin-button;
+  opacity:1;
+}
 
 .result{border-radius:14px;border:1.5px solid #e7e5e4;background:#fff;margin-bottom:1.25rem;overflow:hidden;transition:border-color .25s}
 .result.pass{border-color:#86efac}
 .result.high{border-color:#fca5a5}
-.result.low {border-color:#fde68a}
+.result.low{border-color:#fde68a}
 .result-main{display:flex;align-items:center}
 .result-diagram{flex:1;padding:1.25rem 0 1rem;border-right:1.5px solid #e7e5e4;display:flex;align-items:center;justify-content:center}
 .result-diagram img{width:100%;max-width:200px;display:block}
