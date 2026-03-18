@@ -215,9 +215,9 @@ h1{font-size:24px;font-weight:800;letter-spacing:-.02em;color:#1c1917;margin-bot
         <p>Copy this prompt into your LLM of choice, then fill in the current outcome after each calculation:</p>
         <div class="prompt-box" id="prompt-text">You are assisting in a commissioning task that requires adjusting five continuous parameters. Your goal is to suggest the next set of parameter values that reduces the difference between the current system outcome and the target outcome. Each parameter is within the range [0.5, 1.5].
 
-I will provide: (1) the system outcome; (2) the target outcome is 100.31–102.32.
+I will provide: (1) the system outcome; (2) The current commissioning condition starts with friction coefficient \mu = 0.10, thickness = 0.90 \,\text{mm}, and five roller spacing values [0.90, 0.90, 0.90, 0.90, 0.90]. The resulting system output is 106.56. The target output range is 100.31 to 102.32.the target outcome is 100.31-102.32.
 
-You should output: (1) A new set of five parameter values that moves the outcome closer to the target. (2) A short explanation describing which directions you adjusted and why.<button class="copy-btn" onclick="copyPrompt(event)">Copy</button></div>
+You should output: (1) A new set of five parameter values that moves the outcome closer to the target(Each value must have no more than two decimal places). (2) A short explanation describing which directions you adjusted and why.<button class="copy-btn" onclick="copyPrompt(event)">Copy</button></div>
       </div>
     </div>
 
