@@ -355,13 +355,20 @@ function doExport(){
   const blob=new Blob([bytes],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
   const a=document.createElement('a');
   const safe=name.replace(/[^a-zA-Z0-9_-]+/g,'_')||'student';
-  a.href=URL.createObjectURL(blob);
+  const url=URL.createObjectURL(blob);
+  a.href=url;
   const friction=getFriction();
   const thickness=getThickness();
   a.download=`${safe}_${friction}_${thickness}.xlsx`;
-  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(a.href);
-  status.textContent='Excel file saved locally.';status.className='submit-status ok';
-  setTimeout(closeModal,900);
+  a.style.display='none';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  // Do not revoke the Blob URL immediately. Safari and some browsers may
+  // cancel the download if the object URL is released in the same event loop.
+  setTimeout(()=>URL.revokeObjectURL(url),2000);
+  status.textContent='Excel download started.';status.className='submit-status ok';
+  setTimeout(closeModal,1200);
 }
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
 document.getElementById('thickness').addEventListener('change',()=>{
