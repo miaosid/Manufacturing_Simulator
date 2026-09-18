@@ -102,6 +102,7 @@ h1{font-size:24px;font-weight:800;letter-spacing:-.02em;color:#1c1917;margin-bot
 .submit-status.ok{color:#15803d}
 .submit-status.err{color:#dc2626}
 </style>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
 <body>
 <div class="wrap">
@@ -349,26 +350,40 @@ function doExport(){
   const name=document.getElementById('student-name').value.trim();
   const status=document.getElementById('submit-status');
   if(!name){status.textContent='Please enter your name.';status.className='submit-status err';return;}
-  const rows=[['Student','Attempt','S1','S2','S3','S4','S5','Friction','Thickness','Deformation','Result','Timestamp']];
-  hist.forEach((r,i)=>rows.push([name,i+1,...r.s,r.f,r.t,r.v,r.ok?'Pass':'Fail',r.time]));
-  const bytes=makeXlsx(rows);
-  const blob=new Blob([bytes],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
-  const a=document.createElement('a');
-  const safe=name.replace(/[^a-zA-Z0-9_-]+/g,'_')||'student';
-  const url=URL.createObjectURL(blob);
-  a.href=url;
-  const friction=getFriction();
-  const thickness=getThickness();
-  a.download=`${safe}_${friction}_${thickness}.xlsx`;
-  a.style.display='none';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  // Do not revoke the Blob URL immediately. Safari and some browsers may
-  // cancel the download if the object URL is released in the same event loop.
-  setTimeout(()=>URL.revokeObjectURL(url),2000);
-  status.textContent='Excel download started.';status.className='submit-status ok';
-  setTimeout(closeModal,1200);
+
+  if(typeof XLSX==='undefined'){
+    status.textContent='Excel library did not load. Please check your internet connection and refresh the page.';
+    status.className='submit-status err';
+    return;
+  }
+
+  try{
+    const rows=[['Student','Attempt','S1','S2','S3','S4','S5','Friction','Thickness','Deformation','Result','Timestamp']];
+    hist.forEach((r,i)=>rows.push([name,i+1,...r.s,r.f,r.t,r.v,r.ok?'Pass':'Fail',r.time]));
+
+    const worksheet=XLSX.utils.aoa_to_sheet(rows);
+    worksheet['!cols']=[
+      {wch:18},{wch:10},{wch:10},{wch:10},{wch:10},{wch:10},{wch:10},
+      {wch:12},{wch:12},{wch:14},{wch:10},{wch:24}
+    ];
+
+    const workbook=XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook,worksheet,'Experiment History');
+
+    const safe=name.replace(/[^a-zA-Z0-9_-]+/g,'_')||'student';
+    const friction=currentFriction();
+    const thickness=currentThickness();
+    const filename=`${safe}_${Number(friction).toFixed(2)}_${Number(thickness).toFixed(2)}.xlsx`;
+
+    XLSX.writeFile(workbook,filename,{bookType:'xlsx',compression:true});
+    status.textContent='Excel download started.';
+    status.className='submit-status ok';
+    setTimeout(closeModal,1200);
+  }catch(err){
+    console.error('Excel export failed:',err);
+    status.textContent='Excel export failed: '+(err && err.message ? err.message : 'unknown error');
+    status.className='submit-status err';
+  }
 }
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
 document.getElementById('thickness').addEventListener('change',()=>{
